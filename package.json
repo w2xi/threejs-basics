@@ -1,0 +1,25 @@
+{
+  "name": "threejs-basics",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/w2xi/threejs-basics.git"
+  },
+  "keywords": [
+    "threejs"
+  ],
+  "author": "w2xi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/w2xi/threejs-basics/issues"
+  },
+  "homepage": "https://github.com/w2xi/threejs-basics#readme",
+  "dependencies": {
+    "three": "^0.136.0"
+  }
+}

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="../../assets/styles/main.css">
+</head>
+<body>
+  <canvas id="c"></canvas>
+  <script type="module">
+    import * as THREE from '../../node_modules/three/build/three.module.js'
+
+    console.log(THREE.REVISION) // 136
+
+    let scene, camera, renderer;
+    let cube, geometry, material
+    let cubes
+
+    const canvas = document.querySelector('#c')
+
+    init()
+
+    function init(){
+      scene = new THREE.Scene()
+
+      const fov = 45
+      const aspect = window.innerWidth / window.innerHeight
+      const near = 1
+      const far = 100
+      
+      camera = new THREE.PerspectiveCamera(fov, aspect, near, far)
+      camera.position.set(0, 5, 5)
+      // Notice: 摄像机默认指向Z轴负方向，上方向朝向Y轴正方向
+      // 这里需要改变的camera的指向，否则什么也看不见
+      camera.lookAt(new THREE.Vector3(0, 0, 0))
+
+      scene.add(new THREE.AxesHelper(20))
+
+      const light = new THREE.DirectionalLight(0xffffff, 1)
+      light.position.set(4, 10, 10)
+      light.castShadow = true
+      scene.add(light)
+
+      geometry = new THREE.BoxGeometry(1, 1, 1)
+      cubes = [
+        makeInstance(geometry, 0x44aa88, 0),
+        makeInstance(geometry, 0x8844aa, -3),
+        makeInstance(geometry, 0xaa8844, 3),
+      ]
+      // material = new THREE.MeshPhongMaterial({ color: 0x44aa88 })
+      // cube = new THREE.Mesh(geometry, material)
+      // cube.position.y = Math.sqrt(3) / 2
+      // cube.castShadow = true
+      // cube.receiveShadow = true
+      scene.add(...cubes)
+
+      geometry = new THREE.PlaneGeometry(10, 10)
+      material = new THREE.MeshPhongMaterial({ color: 0x999999 })
+      const floor = new THREE.Mesh(geometry, material)
+      floor.rotation.x = -Math.PI / 2
+      floor.receiveShadow = true
+      scene.add(floor)
+
+      renderer = new THREE.WebGLRenderer({ canvas })
+      renderer.setSize(window.innerWidth, window.innerHeight)
+      renderer.setPixelRatio(window.devicePixelRatio)
+      renderer.setAnimationLoop(animate)
+      renderer.shadowMap.enabled = true // turn on shadows in the renderer
+
+      renderer.render(scene, camera)
+    }
+
+    function makeInstance(geometry, color, x){
+      const material = new THREE.MeshPhongMaterial({ color })
+      const mesh = new THREE.Mesh(geometry, material)
+
+      mesh.position.x = x
+      mesh.position.y = Math.sqrt(3) / 2
+      mesh.castShadow = true
+      mesh.receiveShadow = true
+
+      return mesh
+    }
+
+    function animate(time){
+      time *= 0.001
+
+      // cube.rotation.x = time
+      // cube.rotation.y = time
+
+      cubes.forEach((cube, idx) => {
+        const speed = 1 + idx * 0.1
+        const rot = time * speed
+
+        cube.rotation.x = rot
+        cube.rotation.y = rot
+      })
+
+      renderer.render(scene, camera)
+    }
+  </script>
+</body>
+</html>
